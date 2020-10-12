@@ -89,8 +89,7 @@ const layouts = {
     ) => {
       const primarySpace = (bounds.width / 3) * primaryFactor;
       const primaryW = primarySpace - 2 * margin;
-      const w =
-        numWindows > 1 ? (bounds.width - primarySpace) / 2 - 2 * margin : 1;
+      const w = (bounds.width - primarySpace) / 2 - 2 * margin;
       const primaryH = bounds.height - 2 * margin;
       const primaryPosition = Math.floor(numWindows / 2);
 
