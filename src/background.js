@@ -200,18 +200,22 @@ const fetchAndUpdateState = async (state) => {
   const winById = {};
 
   windows.forEach((win) => {
+    winById[win.win.id] = win;
     const d = locateWindow(win, displays);
     const list = displaysSettings[d.display.id].winIds;
     if (list.indexOf(win.win.id) == -1) {
       list.push(win.win.id);
     }
-    winById[win.win.id] = win;
-  });
-
-  // We want to keep the order of windows in winsByDisplay
-  displays.forEach((d) => {
-    const did = d.display.id;
-    // sort displaysSettings[did].winIds the same as state.displaysSettings[did].winIds
+    // Remove the window from other displays.
+    for (const displayId of Object.keys(displaysSettings)) {
+      if (displayId != d.display.id) {
+        const list = displaysSettings[displayId].winIds;
+        const idx = list.indexOf(win.win.id);
+        if (idx != -1) {
+          list.splice(idx, 1);
+        }
+      }
+    }
   });
 
   return { ...state, windows: winById, displays, displaysSettings };
