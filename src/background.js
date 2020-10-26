@@ -269,6 +269,37 @@ const swapPrimaryWithfocussed = (state) => {
   return state;
 };
 
+const moveCurrentWindow = (state, direction) => {
+  for (const did of Object.keys(state.displaysSettings)) {
+    const ds = state.displaysSettings[did];
+    for (let i = 0; i < ds.winIds.length; ++i) {
+      const wid = ds.winIds[i];
+      if (
+        state.windows[wid].win.focused &&
+        i + direction >= 0 &&
+        i + direction < ds.winIds.length
+      ) {
+        const newOrder = [...ds.winIds];
+        [newOrder[i], newOrder[i + direction]] = [
+          newOrder[i + direction],
+          newOrder[i]
+        ];
+        return {
+          ...state,
+          displaysSettings: {
+            ...state.displaysSettings,
+            [did]: {
+              ...ds,
+              winIds: newOrder
+            }
+          }
+        };
+      }
+    }
+  }
+  return state;
+};
+
 const newWindow = (state) => {
   console.log("New window");
   return state;
@@ -289,6 +320,16 @@ const commandListener = async (state, command) => {
   switch (command) {
     case "001-next-layout-for-screen": {
       const s = selectNextLayoutForScreen(await fetchAndUpdateState(state));
+      relayout(s);
+      return s;
+    }
+    case "100-move-up": {
+      const s = await moveCurrentWindow(await fetchAndUpdateState(state), -1);
+      relayout(s);
+      return s;
+    }
+    case "101-move-down": {
+      const s = await moveCurrentWindow(await fetchAndUpdateState(state), 1);
       relayout(s);
       return s;
     }

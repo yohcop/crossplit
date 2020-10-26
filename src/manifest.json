@@ -17,6 +17,12 @@
     "001-next-layout-for-screen": {
       "description": "Next layout for the current screen"
     },
+    "100-move-up": {
+      "description": "Move current window up in the stack (Suggested Alt+Shift+k)"
+    },
+    "101-move-down": {
+      "description": "Move current window down in the stack (Suggested Alt+Shift+j)"
+    },
     "900-swap-primary": {
       "description": "Swap current window with primary window (Suggested Alt+Shift+Return)"
     },
