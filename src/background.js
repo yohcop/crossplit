@@ -30,9 +30,9 @@ const listDisplays = async () => {
 const layouts = {
   columns: {
     _doc:
-      "Keep a unique primary window in the center. The others divide the remaining space on the side, vertically",
+      "All windows share the space horizontally, full screen vertically.",
     layout: (
-      win,
+      _win,
       idx,
       numWindows,
       margin,
@@ -75,11 +75,57 @@ const layouts = {
       };
     }
   },
+  rows: {
+    _doc:
+      "All windows share the space horizontally, full screen horizontally.",
+    layout: (
+      _win,
+      idx,
+      numWindows,
+      margin,
+      bounds,
+      _primaryCount,
+      primaryFactor
+    ) => {
+      const primarySpace = (bounds.height / numWindows) * primaryFactor;
+      const primaryH = primarySpace - 2 * margin;
+      const h =
+        numWindows > 1
+          ? (bounds.height - primarySpace) / (numWindows - 1) - 2 * margin
+          : 1;
+      const w = bounds.width - 2 * margin;
+      const primaryPosition =
+        numWindows > 1 ? Math.floor(numWindows / 2 - 1) : 1;
+
+      if (idx == 0) {  // Primary window
+        return {
+          top: margin + primaryPosition * (h + 2 * margin) + bounds.top,
+          left: bounds.left + margin,
+          width: w,
+          height: primaryH
+        };
+      }
+      if (idx > primaryPosition) {  // Windows after the primary
+        return {
+          top: margin + (idx - 1) * (h + 2 * margin) + primarySpace + bounds.top,
+          left: bounds.left + margin,
+          width: w,
+          height: h
+        };
+      }  // Windows before the primary
+      return {
+        top: margin + (idx - 1) * (w + 2 * margin) + bounds.top,
+        left: bounds.left + margin,
+        width: w,
+        height: h
+      };
+    }
+  },
   column_and_rows: {
     _doc:
       "Keep a unique primary window in the center. The others divide the remaining space on the side, horizontally",
     layout: (
-      win,
+      _win,
       idx,
       numWindows,
       margin,

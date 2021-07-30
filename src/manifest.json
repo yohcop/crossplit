@@ -4,7 +4,7 @@
   "name": "Window Manager for Chrome OS",
   "short_name": "ChromeOS-WM",
   "description": "Window Manager for Chrome OS",
-  "version": "0.1",
+  "version": "0.2",
 
   "permissions": ["tabs", "storage", "system.display"],
 
