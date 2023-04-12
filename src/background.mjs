@@ -124,7 +124,7 @@ const fetchAndUpdateState = async (state) => {
     return { ...state, windows: winById, displays, displaysSettings };
 };
 
-const selectNextLayoutForScreen = (state) => {
+const selectNextLayoutForScreen = (state, direction) => {
     for (const did of Object.keys(state.displaysSettings)) {
         const ds = state.displaysSettings[did];
         for (let i = 0; i < ds.winIds.length; ++i) {
@@ -138,7 +138,7 @@ const selectNextLayoutForScreen = (state) => {
                             ...ds,
                             layout:
                                 LAYOUT_NAMES[
-                                (LAYOUT_NAMES.indexOf(ds.layout) + 1) % LAYOUT_NAMES.length
+                                (LAYOUT_NAMES.indexOf(ds.layout) + direction + LAYOUT_NAMES.length) % LAYOUT_NAMES.length
                                 ]
                         }
                     }
@@ -222,7 +222,12 @@ const commandListener = async (state, command) => {
     console.log("Command received", command);
     switch (command) {
         case "001-next-layout-for-screen": {
-            const s = selectNextLayoutForScreen(await fetchAndUpdateState(state));
+            const s = selectNextLayoutForScreen(await fetchAndUpdateState(state), 1);
+            relayout(s);
+            return s;
+        }
+        case "002-prev-layout-for-screen": {
+            const s = selectNextLayoutForScreen(await fetchAndUpdateState(state), -1);
             relayout(s);
             return s;
         }

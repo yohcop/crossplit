@@ -15,7 +15,10 @@
 
   "commands": {
     "001-next-layout-for-screen": {
-      "description": "Next layout for the current screen"
+      "description": "Next layout for the current screen (Suggested  Alt+Shift+h)"
+    },
+    "002-prev-layout-for-screen": {
+      "description": "Previous layout for the current screen (Suggested  Alt+Shift+l)"
     },
     "100-move-up": {
       "description": "Move current window up in the stack (Suggested Alt+Shift+k)"
@@ -24,8 +27,8 @@
       "description": "Move current window down in the stack (Suggested Alt+Shift+j)"
     },
     "900-swap-primary": {
-      "description": "Swap current window with primary window (Suggested Alt+Shift+Return)"
+      "description": "Swap current window with primary window (Suggested Alt+Shift+m)"
     },
-    "999-relayout": { "description": "Relayout (Suggest Alt+Shift+Z)" }
+    "999-relayout": { "description": "Relayout (Suggest Alt+Shift+,)" }
   }
 }
