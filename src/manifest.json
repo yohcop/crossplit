@@ -9,7 +9,7 @@
   "permissions": ["tabs", "storage", "system.display"],
 
   "background": {
-    "scripts": ["background.mjs"],
+    "page": "background.html",
     "persistent": true
   },
 
@@ -25,6 +25,12 @@
     },
     "101-move-down": {
       "description": "Move current window down in the stack (Suggested Alt+Shift+j)"
+    },
+    "200-increase-primary": {
+      "description": "Move the primary window bigger (Suggested Alt+Shift+i)"
+    },
+    "201-decrease-primary": {
+      "description": "Make the primary window smaller (Suggested Alt+Shift+u)"
     },
     "900-swap-primary": {
       "description": "Swap current window with primary window (Suggested Alt+Shift+m)"

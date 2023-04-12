@@ -1,6 +1,8 @@
 import { layouts, LAYOUT_NAMES } from "./layouts.mjs";
 
 const WINTYPES = { windowTypes: Object.values(chrome.windows.WindowType) };
+const DEFAULT_LAYOUT = LAYOUT_NAMES[0];
+const DEFAULT_PRIMARY_FACTOR = 1.2;
 
 const listWindows = async () => {
     return new Promise((resolve, reject) => {
@@ -93,8 +95,8 @@ const fetchAndUpdateState = async (state) => {
         } else {
             displaysSettings[id] = {
                 primaryCount: 1,
-                primaryFactor: 1.3,
-                layout: "column_and_rows",
+                primaryFactor: DEFAULT_PRIMARY_FACTOR,
+                layout: DEFAULT_LAYOUT,
                 winIds: []
             };
         }
@@ -140,6 +142,27 @@ const selectNextLayoutForScreen = (state, direction) => {
                                 LAYOUT_NAMES[
                                 (LAYOUT_NAMES.indexOf(ds.layout) + direction + LAYOUT_NAMES.length) % LAYOUT_NAMES.length
                                 ]
+                        }
+                    }
+                };
+            }
+        }
+    }
+};
+
+const increasePrimarySize = (state, increase) => {
+    for (const did of Object.keys(state.displaysSettings)) {
+        const ds = state.displaysSettings[did];
+        for (let i = 0; i < ds.winIds.length; ++i) {
+            const wid = ds.winIds[i];
+            if (state.windows[wid].win.focused) {
+                return {
+                    ...state,
+                    displaysSettings: {
+                        ...state.displaysSettings,
+                        [did]: {
+                            ...ds,
+                            primaryFactor: ds.primaryFactor + increase,
                         }
                     }
                 };
@@ -241,6 +264,16 @@ const commandListener = async (state, command) => {
             relayout(s);
             return s;
         }
+        case "200-increase-primary": {
+            const s = increasePrimarySize(await fetchAndUpdateState(state), 0.05);
+            relayout(s);
+            return s;
+        }
+        case "201-decrease-primary": {
+            const s = increasePrimarySize(await fetchAndUpdateState(state), -0.05);
+            relayout(s);
+            return s;
+        }
         case "999-relayout": {
             const s = await fetchAndUpdateState(state);
             relayout(s);
@@ -264,7 +297,6 @@ const displayChanged = (state) => {
 
 export const setup = async () => {
     let state = {
-        layout: "columns",
         displaysSettings: {}, // id => { primaryCount, primaryFactor, layout, windows: [wid] }
         windows: {}, // id => { window: {... stuff from chrome...}, layout: {x, y, w, h} }
         displays: [] // { display: {... stuff from chrome...}}

@@ -146,8 +146,8 @@ export const layouts = {
           Math.ceil((numWindows - 1) / 2),
           margin,
           {
-            left: 0,
-            top: 0,
+            left: bounds.left,
+            top: bounds.top,
             width: bounds.width - primarySpace - w - margin,
             height: bounds.height,
           },
@@ -161,7 +161,7 @@ export const layouts = {
         margin,
         {
           left: bounds.left + margin + w + primarySpace,
-          top: 0,
+          top: bounds.top,
           width: bounds.width - primarySpace - w - margin,
           height: bounds.height,
         },
