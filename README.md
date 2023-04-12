@@ -16,3 +16,7 @@ Chrome OS split/tiling window manager
 
 Both of these are as far as I know current limitations of the APIs, and I don't
 know of any workarounds either. But if you do, let me know!
+
+# Generating layout images
+
+`node testing/gen-layout-pics.mjs > build/a.html`

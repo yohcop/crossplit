@@ -9,7 +9,7 @@
   "permissions": ["tabs", "storage", "system.display"],
 
   "background": {
-    "scripts": ["background.js"],
+    "scripts": ["background.mjs"],
     "persistent": true
   },
 
