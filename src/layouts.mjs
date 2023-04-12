@@ -208,7 +208,74 @@ export const layouts = {
         1
       );
     }
+  },
+  alternating_splits: {
+    _name: "Alternates horizontal/vertical splits",
+    _doc:
+      "Splits the space horizontally (by primaryFactor), then vertically (by primaryFactor), and does that recursively",
+    layout: (
+      _win,
+      idx,
+      numWindows,
+      margin,
+      bounds,
+      _primaryCount,
+      primaryFactor
+    ) => {
+      return altSplitLayoutFn(_win, idx, numWindows, margin, bounds, _primaryCount, primaryFactor, 0);
+    }
   }
 };
 
 export const LAYOUT_NAMES = Object.keys(layouts);
+
+// The recursive layout function for alternating_splits.
+// Moved here, because we add a new argument, splitNumber.
+const altSplitLayoutFn = (
+  _win,
+  idx,
+  numWindows,
+  margin,
+  bounds,
+  _primaryCount,
+  primaryFactor,
+  splitNumber,
+) => {
+  const primarySpace = (bounds.width / 2) * primaryFactor;
+  const primaryW = primarySpace - 2 * margin;
+  const primaryH = bounds.height - 2 * margin;
+
+  if (idx == splitNumber) {
+    // This is the "primary" window of this split
+    // If there are no more windows, use all the remaining space.
+    if (idx == numWindows - 1) {
+      return {
+        top: bounds.top + margin,
+        left: bounds.left + margin,
+        width: bounds.width - 2 * margin,
+        height: bounds.height - 2 * margin,
+      };
+    }
+    return {
+      top: bounds.top + margin,
+      left: bounds.left + margin,
+      width: primaryW,
+      height: primaryH,
+    };
+  }
+  return reverse(altSplitLayoutFn(
+    _win,
+    idx,
+    numWindows,
+    margin,
+    reverse({
+      top: bounds.top,
+      left: bounds.left + primarySpace - margin,
+      width: bounds.width - primarySpace + margin,
+      height: bounds.height,
+    }),
+    _primaryCount,
+    primaryFactor,
+    splitNumber + 1,
+  ))
+}
